@@ -3,8 +3,8 @@
 /**
  *	Plugin Name: User Access Expiration
  *	Plugin URI: https://github.com/NateJacobs/User-Access-Expiration
- *	Description: Expires a user's access to a site after a specified number of days. It uses the user registered date/time and an admin configured number of days to determine when to expire the users access. The administrator can restore a user's access from the user's profile page.
- *	Version: 0.2
+ *	Description: Expires a user's access to a site after a specified number of days based upon the registration date. The administrator can restore a user's access from the user's profile page.
+ *	Version: 0.3
  *	License: GPL V2
  *	Author: Nate Jacobs <nate@natejacobs.org>
  *	Author URI: http://natejacobs.org
@@ -103,20 +103,24 @@ class UserAccessExpiration
 	public function check_user_access_status( $user, $user_login, $password )
 	{
 		// get user data by login
-		$user = get_user_by( 'login', $user_login );
+		$user_info = get_user_by( 'login', $user_login );
+		$access_expiration = '';
+		$expire_time = '';
+		$new_time = '';
 		
 		// if the user has entered something in the user name box
-		if ( $user_login )
+		if ( $user_info )
 		{
 			// get the plugin options
 			$options = get_option( self::option_name );
 			// get the custom user meta defined earlier
-			$access_expiration = get_user_meta( $user->ID, self::user_meta, true );
+			$access_expiration = get_user_meta( $user_info->ID, self::user_meta, true );
 			// get the user registered time
-			$expire_time = strtotime( $user->user_registered );
+			$expire_time = strtotime( $user_info->user_registered );
 			// get the date in unix time that is specified number of elapsed days from the registered date
 			$new_time = strtotime( '+'.$options['number_days'].'days', $expire_time );
 		}
+		
 		if ( empty( $user_login ) || empty($password) )
 		{
 			if ( empty($username) )
@@ -132,7 +136,7 @@ class UserAccessExpiration
 			if ( $access_expiration == 'true' || $expire_time > $new_time )
 			{
 				// change the custom user meta to show access is now denied
-				update_user_meta( $user->ID, self::user_meta, 'true' );
+				update_user_meta( $user_info->ID, self::user_meta, 'true' );
 				// register a new error with the error message set above
 				$user = new WP_Error( 'access_denied', __( '<strong>Your access to the site has expired.</strong><br>'.$options['error_message'] ) );
 				// deny access to login and send back to login page
