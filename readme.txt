@@ -16,6 +16,10 @@ Expires a user's access to a site after a specified number of days. It uses the 
 
 Extract the zip file and just drop the contents in the wp-content/plugins/ directory of your WordPress installation and then activate the Plugin from Plugins page.
 
+== Screen Shots ==
+1. Access denied
+2. Admin settings
+
 == Changelog ==
 
 = 0.4 =
