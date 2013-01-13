@@ -4,7 +4,7 @@ Contributors: NateJacobs
 Tags: user, access, expiration
 Requires at least: 3.0
 Tested up to: 3.5
-Stable tag: 0.3
+Stable tag: 0.4
 
 A user's access to a site is disabled after a specified number of days. The admin can set the number of days since registration to deny access.
 
