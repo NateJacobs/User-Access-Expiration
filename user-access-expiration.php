@@ -4,7 +4,7 @@
  *	Plugin Name: User Access Expiration
  *	Plugin URI: https://github.com/NateJacobs/User-Access-Expiration
  *	Description: Expires a user's access to a site after a specified number of days based upon the registration date. The administrator can restore a user's access from the user's profile page.
- *	Version: 0.3
+ *	Version: 0.4
  *	License: GPL V2
  *	Author: Nate Jacobs <nate@natejacobs.org>
  *	Author URI: http://natejacobs.org
@@ -94,6 +94,7 @@ class UserAccessExpiration
 	 *
 	 *	@author		Nate Jacobs
 	 *	@since		0.1
+	 *	@updated	0.4
 	 *
 	 *	@param	string	$user
 	 *	@param	string	$user_login
@@ -107,6 +108,7 @@ class UserAccessExpiration
 		$access_expiration = '';
 		$expire_time = '';
 		$new_time = '';
+		$expired = '';
 		
 		// if the user has entered something in the user name box
 		if ( $user_info )
@@ -116,24 +118,36 @@ class UserAccessExpiration
 			// get the custom user meta defined earlier
 			$access_expiration = get_user_meta( $user_info->ID, self::user_meta, true );
 			// get the user registered time
-			$expire_time = strtotime( $user_info->user_registered );
-			// get the date in unix time that is specified number of elapsed days from the registered date
-			$new_time = strtotime( '+'.$options['number_days'].'days', $expire_time );
+			$register_time = strtotime( $user_info->user_registered );
+			// get the date in unix time that is the specified number of elapsed days from the registered date
+			$expire_time = strtotime( '+'.$options['number_days'].'days', $register_time );
+			
+			if( $expire_time < date( 'U' ) )
+			{
+				if( user_can($user_info->ID, 'manage_options') )
+				{
+					$expired = false;
+				}
+				else
+				{
+					$expired = true;
+				}
+			}
 		}
 		
-		if ( empty( $user_login ) || empty($password) )
+		if ( empty( $user_login ) || empty( $password ) )
 		{
-			if ( empty($username) )
+			if ( empty( $username ) )
 				$user = new WP_Error('empty_username', __('<strong>ERROR</strong>: The username field is empty.'));
 	
-			if ( empty($password) )
+			if ( empty( $password ) )
 				$user = new WP_Error('empty_password', __('<strong>ERROR</strong>: The password field is empty.'));
 		}
 		else
 		{
 			// if the custom user meta field is true ( access is expired ) or the current date is more than
 			// the specified number of days past the registered date, deny access
-			if ( $access_expiration == 'true' || $expire_time > $new_time )
+			if ( $access_expiration == 'true' || $expired )
 			{
 				// change the custom user meta to show access is now denied
 				update_user_meta( $user_info->ID, self::user_meta, 'true' );
