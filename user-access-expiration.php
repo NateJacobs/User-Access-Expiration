@@ -4,7 +4,7 @@
  *	Plugin Name: User Access Expiration
  *	Plugin URI: https://github.com/NateJacobs/User-Access-Expiration
  *	Description: Expires a user's access to a site after a specified number of days based upon the registration date. The administrator can restore a user's access from the user's profile page.
- *	Version: 0.4
+ *	Version: 1.0
  *	License: GPL V2
  *	Author: Nate Jacobs <nate@natejacobs.org>
  *	Author URI: http://natejacobs.org

@@ -2,9 +2,9 @@
 
 Contributors: NateJacobs 
 Tags: user, access, expiration
-Requires at least: 3.0
-Tested up to: 3.5
-Stable tag: 0.4
+Requires at least: 3.5
+Tested up to: 3.7
+Stable tag: 1.0
 
 A user's access to a site is disabled after a specified number of days. The admin can set the number of days since registration to deny access.
 
@@ -22,16 +22,21 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 
 == Changelog ==
 
+= 1.0 =
+* Display date registered on user's profile page
+* Bump minimum required version to 3.5
+* Compatible with 3.7
+
 = 0.4 =
-Exempt admins and super admins from expiration
+* Exempt admins and super admins from expiration
 
 = 0.3 =
-Fix log in issue
+* Fix log in issue
 
 = 0.2 =
-Added expiration settings to Settings Menu
-Allow administrator to set number of days a user's access should expire after
-Allow administrator to reset a user's access from the user's profile page
+* Added expiration settings to Settings Menu
+* Allow administrator to set number of days a user's access should expire after
+* Allow administrator to reset a user's access from the user's profile page
 
 = 0.1 =
-First version
+* First version
