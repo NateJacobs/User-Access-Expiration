@@ -21,16 +21,16 @@ class UserAccessExpiration
 	public function __construct()
 	{
 		// since 0.1
-		add_action( 'user_register', array( __CLASS__, 'set_expiration_timer' ) );
-		add_filter( 'authenticate', array( __CLASS__, 'check_user_access_status' ), 10, 3 );
-		add_action( 'admin_menu', array( __CLASS__, 'add_user_expire_submenu' ) );
-		add_action('admin_init', array( __CLASS__, 'options_init' ));
-		register_activation_hook( __FILE__, array( __CLASS__, 'activation' ) );
+		add_action( 'user_register', array( $this, 'set_expiration_timer' ) );
+		add_filter( 'authenticate', array( $this, 'check_user_access_status' ), 10, 3 );
+		add_action( 'admin_menu', array( $this, 'add_user_expire_submenu' ) );
+		add_action('admin_init', array( $this, 'options_init' ));
+		register_activation_hook( __FILE__, array( $this, 'activation' ) );
 		// since 0.2
-		add_action( 'show_user_profile', array( __CLASS__, 'add_user_profile_fields' ) );
-		add_action( 'edit_user_profile', array( __CLASS__, 'add_user_profile_fields' ) );
-		add_action( 'personal_options_update', array( __CLASS__, 'save_user_profile_fields' ) );
-		add_action( 'edit_user_profile_update', array( __CLASS__, 'save_user_profile_fields' ) );
+		add_action( 'show_user_profile', array( $this, 'add_user_profile_fields' ) );
+		add_action( 'edit_user_profile', array( $this, 'add_user_profile_fields' ) );
+		add_action( 'personal_options_update', array( $this, 'save_user_profile_fields' ) );
+		add_action( 'edit_user_profile_update', array( $this, 'save_user_profile_fields' ) );
 	}
 	
 	/** 
@@ -176,7 +176,7 @@ class UserAccessExpiration
 			__( 'User Expiration' ),
 			'manage_options',
 			'user-access-expiration',
-			array( __CLASS__, 'user_access_expire_settings' )
+			array( $this, 'user_access_expire_settings' )
 		);
 	}
 	
@@ -193,12 +193,12 @@ class UserAccessExpiration
 		register_setting( 
 			'user_access_expire_options',
 			'user_access_expire_options',
-			array( __CLASS__, 'user_access_expire_options_validate' )
+			array( $this, 'user_access_expire_options_validate' )
 		);
 		add_settings_section(
 			'primary_section',
 			'', //section title
-			array( __CLASS__, 'primary_section_text' ),
+			array( $this, 'primary_section_text' ),
 			__FILE__
 		);
 		
@@ -222,7 +222,7 @@ class UserAccessExpiration
 			add_settings_field(
 				$settings['id'],
 				$settings['title'],
-				array( __CLASS__, $settings['function'] ),
+				array( $this, $settings['function'] ),
 				__FILE__,
 				$settings['section']
 			);
