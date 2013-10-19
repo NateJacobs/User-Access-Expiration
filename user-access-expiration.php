@@ -350,7 +350,7 @@ class UserAccessExpiration
 		<table class="form-table">
 		<tr>
 			<th>Registered date: </th>
-			<td><?php echo get_the_author_meta( 'user_registered', $user->ID ); ?></td>
+			<td><?php echo date_i18n(get_option('date_format').' '.get_option('time_format') ,strtotime(get_the_author_meta( 'user_registered', $user->ID ))); ?></td>
 		</tr>
 		<tr>
 			<th><label for="user-access">Does this person have access to the site?</label></th>
