@@ -47,10 +47,10 @@ class UserAccessExpiration
 	public function activation()
 	{
 		// limit user data returned to just the id
-		$args = array( 'fields' => 'ID' );
-		$users = get_users( $args );
+		$users = get_users( array( 'fields' => 'ID' ) );
+		
 		// loop through each user
-		foreach ( $users as $user )
+		foreach( $users as $user )
 		{
 			// add the custom user meta to the wp_usermeta table
 			add_user_meta( $user, $this->user_meta, 'false' );
@@ -135,19 +135,19 @@ class UserAccessExpiration
 			}
 		}
 		
-		if ( empty( $user_login ) || empty( $password ) )
+		if( empty( $user_login ) || empty( $password ) )
 		{
-			if ( empty( $username ) )
-				$user = new WP_Error('empty_username', __('<strong>ERROR</strong>: The username field is empty.'));
+			if( empty( $username ) )
+				$user = new WP_Error( 'empty_username', __( '<strong>ERROR</strong>: The username field is empty.' ) );
 	
-			if ( empty( $password ) )
-				$user = new WP_Error('empty_password', __('<strong>ERROR</strong>: The password field is empty.'));
+			if( empty( $password ) )
+				$user = new WP_Error( 'empty_password', __( '<strong>ERROR</strong>: The password field is empty.' ) );
 		}
 		else
 		{
 			// if the custom user meta field is true ( access is expired ) or the current date is more than
 			// the specified number of days past the registered date, deny access
-			if ( $access_expiration == 'true' || $expired )
+			if( $access_expiration == 'true' || $expired )
 			{
 				// change the custom user meta to show access is now denied
 				update_user_meta( $user_info->ID, $this->user_meta, 'true' );
@@ -197,7 +197,7 @@ class UserAccessExpiration
 		);
 		add_settings_section(
 			'primary_section',
-			'', //section title
+			'',
 			array( $this, 'primary_section_text' ),
 			__FILE__
 		);
@@ -254,7 +254,6 @@ class UserAccessExpiration
 	public function setting_number_days()
 	{
 		$options = get_option( $this->option_name );
-		//{$this->get_settings( 'user-access-expiration' )}
 		echo "<input id='number_of_days' name='user_access_expire_options[number_days]' size='10' type='text' value='{$options['number_days']}' />";
 		echo "<br>How many days after registration should a user have access for?";
 	}
@@ -343,14 +342,14 @@ class UserAccessExpiration
 	 */
 	 public function add_user_profile_fields( $user )
 	 {
-	 	if ( current_user_can( 'manage_options', $user->ID ) )
+	 	if( current_user_can( 'manage_options', $user->ID ) )
 		{
 		?>
 		<h3>User Access Expiration</h3>
 		<table class="form-table">
 		<tr>
 			<th>Registered date: </th>
-			<td><?php echo date_i18n(get_option('date_format').' '.get_option('time_format') ,strtotime(get_the_author_meta( 'user_registered', $user->ID ))); ?></td>
+			<td><?php echo date_i18n( get_option( 'date_format' ).' '.get_option( 'time_format' ) ,strtotime( get_the_author_meta( 'user_registered', $user->ID ) ) ); ?></td>
 		</tr>
 		<tr>
 			<th><label for="user-access">Does this person have access to the site?</label></th>
