@@ -71,7 +71,7 @@ class UserAccessExpiration
 		foreach( $users as $user )
 		{
 			// add the custom user meta to the wp_usermeta table
-			add_user_meta( $user, $this->user_meta, 'false' );
+			add_user_meta( $user, $this->user_meta, 'false', true );
 		}
 		
 		// add option with base information
@@ -99,7 +99,7 @@ class UserAccessExpiration
 	 */
 	public function set_expiration_timer( $user_id )
 	{
-		add_user_meta( $user_id, $this->user_meta, 'false' );
+		add_user_meta( $user_id, $this->user_meta, 'false', true );
 	}
 	
 	/** 

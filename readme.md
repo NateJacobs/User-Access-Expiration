@@ -2,9 +2,9 @@
 
 **Contributors:** NateJacobs   
 **Tags:** user, registration, activation, email  
-**Requires at least:** 3.5  
-**Tested up to:** 3.7
-**Stable tag:** 1.0  
+**Requires at least:** 3.5 
+**Tested up to:** 3.8
+**Stable tag:** 1.1
 
 Require users to enter an activation code to access the site the first time. The activation code is emailed upon user registration.
 
@@ -30,6 +30,10 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 
 
 ## Changelog ##
+
+### 1.1 ###
+* Compatible with 3.8
+* Add support for WordPress language packs introduced in 3.7
 
 ### 1.0 ###
 * Display date registered on user's profile page
