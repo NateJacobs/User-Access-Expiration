@@ -25,6 +25,7 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 = 1.1 =
 * Compatible with 3.8
 * Add support for WordPress language packs introduced in 3.7
+* Add uninstall.php file to remove traces of the plugin once it has been deleted
 
 = 1.0 =
 * Display date registered on user's profile page
