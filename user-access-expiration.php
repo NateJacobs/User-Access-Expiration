@@ -14,7 +14,7 @@
 class UserAccessExpiration
 {	
 	// the plugin options meta key	
-	protected $option_name = "user_access_expire_options";
+	protected $option_name = 'user_access_expire_options';
 	// the custom user meta key
 	protected $user_meta = 'uae_user_access_expired';
 	
