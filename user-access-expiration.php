@@ -13,9 +13,9 @@
 class UserAccessExpiration
 {	
 	// the plugin options meta key	
-	CONST option_name = "user_access_expire_options";
+	protected $option_name = "user_access_expire_options";
 	// the custom user meta key
-	CONST user_meta = 'uae_user_access_expired';
+	protected $user_meta = 'uae_user_access_expired';
 	
 	// hook into user registration and authentication
 	public function __construct()
@@ -53,12 +53,12 @@ class UserAccessExpiration
 		foreach ( $users as $user )
 		{
 			// add the custom user meta to the wp_usermeta table
-			add_user_meta( $user, self::user_meta, 'false' );
+			add_user_meta( $user, $this->user_meta, 'false' );
 		}
 		
 		// add option with base information
 		add_option( 
-			self::option_name, 
+			$this->option_name, 
 			array( 
 				'error_message' => 'To gain access please contact us.',
 				'number_days' => '30'
@@ -81,7 +81,7 @@ class UserAccessExpiration
 	 */
 	public function set_expiration_timer( $user_id )
 	{
-		add_user_meta( $user_id, self::user_meta, 'false' );
+		add_user_meta( $user_id, $this->user_meta, 'false' );
 	}
 	
 	/** 
@@ -114,9 +114,9 @@ class UserAccessExpiration
 		if ( $user_info )
 		{
 			// get the plugin options
-			$options = get_option( self::option_name );
+			$options = get_option( $this->option_name );
 			// get the custom user meta defined earlier
-			$access_expiration = get_user_meta( $user_info->ID, self::user_meta, true );
+			$access_expiration = get_user_meta( $user_info->ID, $this->user_meta, true );
 			// get the user registered time
 			$register_time = strtotime( $user_info->user_registered );
 			// get the date in unix time that is the specified number of elapsed days from the registered date
@@ -150,7 +150,7 @@ class UserAccessExpiration
 			if ( $access_expiration == 'true' || $expired )
 			{
 				// change the custom user meta to show access is now denied
-				update_user_meta( $user_info->ID, self::user_meta, 'true' );
+				update_user_meta( $user_info->ID, $this->user_meta, 'true' );
 				// register a new error with the error message set above
 				$user = new WP_Error( 'access_denied', __( '<strong>Your access to the site has expired.</strong><br>'.$options['error_message'] ) );
 				// deny access to login and send back to login page
@@ -253,7 +253,7 @@ class UserAccessExpiration
 	 */
 	public function setting_number_days()
 	{
-		$options = get_option( self::option_name );
+		$options = get_option( $this->option_name );
 		//{$this->get_settings( 'user-access-expiration' )}
 		echo "<input id='number_of_days' name='user_access_expire_options[number_days]' size='10' type='text' value='{$options['number_days']}' />";
 		echo "<br>How many days after registration should a user have access for?";
@@ -270,7 +270,7 @@ class UserAccessExpiration
 	 */
 	public function setting_error_message()
 	{
-		$options = get_option( self::option_name );
+		$options = get_option( $this->option_name );
 		echo "<input id='error_message' name='user_access_expire_options[error_message]' size='75' type='text' value='{$options['error_message']}' />";
 		echo "<br>This message is displayed to a user once their access is denied.";
 		echo "<br><b>Example:</b> To gain access please contact us at myemail@myexample.com.";	
@@ -355,7 +355,7 @@ class UserAccessExpiration
 		<tr>
 			<th><label for="user-access">Does this person have access to the site?</label></th>
 			<td>
-				<?php $access = get_the_author_meta( self::user_meta, $user->ID ); ?>
+				<?php $access = get_the_author_meta( $this->user_meta, $user->ID ); ?>
 				<select id="user-access" name="user-access" class="regular-text">
 					<option value="false" <?php if ( $access == 'false' ) echo "selected"; ?>>Yes</option>
 					<option value="true" <?php if ( $access == 'true' ) echo "selected"; ?>>No</option>
@@ -381,7 +381,7 @@ class UserAccessExpiration
 	{
 		if( !current_user_can( 'manage_options', $user_id ) )
 			return false;
-		update_user_meta( $user_id, self::user_meta, $_POST['user-access'] );
+		update_user_meta( $user_id, $this->user_meta, $_POST['user-access'] );
 	}
 }
 new UserAccessExpiration();
