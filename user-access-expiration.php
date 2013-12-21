@@ -25,7 +25,7 @@ class UserAccessExpiration
 		add_action( 'user_register', array( $this, 'set_expiration_timer' ) );
 		add_filter( 'authenticate', array( $this, 'check_user_access_status' ), 10, 3 );
 		add_action( 'admin_menu', array( $this, 'add_user_expire_submenu' ) );
-		add_action('admin_init', array( $this, 'options_init' ));
+		add_action( 'admin_init', array( $this, 'options_init' ) );
 		register_activation_hook( __FILE__, array( $this, 'activation' ) );
 		// since 0.2
 		add_action( 'show_user_profile', array( $this, 'add_user_profile_fields' ) );
