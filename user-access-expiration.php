@@ -8,6 +8,7 @@
  *	License: GPL V2
  *	Author: Nate Jacobs <nate@natejacobs.org>
  *	Author URI: http://natejacobs.org
+ *	Text Domain: user-access-expiration
  */
  
 class UserAccessExpiration
@@ -31,8 +32,25 @@ class UserAccessExpiration
 		add_action( 'edit_user_profile', array( $this, 'add_user_profile_fields' ) );
 		add_action( 'personal_options_update', array( $this, 'save_user_profile_fields' ) );
 		add_action( 'edit_user_profile_update', array( $this, 'save_user_profile_fields' ) );
+		
+		// since 1.1
+		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 	}
 	
+	/** 
+	 *	
+	 *
+	 *	@author		Nate Jacobs
+	 *	@date		12/21/13
+	 *	@since		1.0
+	 *
+	 *	@param		
+	 */
+	public function load_textdomain()
+	{
+		load_plugin_textdomain( 'user-access-expiration' );
+	}
+
 	/** 
 	 *	Activation
 	 *
@@ -60,7 +78,7 @@ class UserAccessExpiration
 		add_option( 
 			$this->option_name, 
 			array( 
-				'error_message' => 'To gain access please contact us.',
+				'error_message' => __( 'To gain access please contact us.', 'user-access-expiration' ),
 				'number_days' => '30'
 			),
 			'',
@@ -138,10 +156,10 @@ class UserAccessExpiration
 		if( empty( $user_login ) || empty( $password ) )
 		{
 			if( empty( $username ) )
-				$user = new WP_Error( 'empty_username', __( '<strong>ERROR</strong>: The username field is empty.' ) );
+				$user = new WP_Error( 'empty_username', __( '<strong>ERROR</strong>: The username field is empty.', 'user-access-expiration' ) );
 	
 			if( empty( $password ) )
-				$user = new WP_Error( 'empty_password', __( '<strong>ERROR</strong>: The password field is empty.' ) );
+				$user = new WP_Error( 'empty_password', __( '<strong>ERROR</strong>: The password field is empty.', 'user-access-expiration' ) );
 		}
 		else
 		{
@@ -152,7 +170,7 @@ class UserAccessExpiration
 				// change the custom user meta to show access is now denied
 				update_user_meta( $user_info->ID, $this->user_meta, 'true' );
 				// register a new error with the error message set above
-				$user = new WP_Error( 'access_denied', __( '<strong>Your access to the site has expired.</strong><br>'.$options['error_message'] ) );
+				$user = new WP_Error( 'access_denied', __( '<strong>Your access to the site has expired.</strong><br>'.$options['error_message'], 'user-access-expiration' ) );
 				// deny access to login and send back to login page
 				remove_action( 'authenticate', 'wp_authenticate_username_password', 20 );
 			}
@@ -172,8 +190,8 @@ class UserAccessExpiration
 	{
 		add_submenu_page(
 			'options-general.php',
-			__( 'User Access Expiration' ),
-			__( 'User Expiration' ),
+			__( 'User Access Expiration', 'user-access-expiration' ),
+			__( 'User Expiration', 'user-access-expiration' ),
 			'manage_options',
 			'user-access-expiration',
 			array( $this, 'user_access_expire_settings' )
@@ -205,13 +223,13 @@ class UserAccessExpiration
 		$settings_fields = array(
 			array(
 				'id' => 'number_of_days',
-				'title' => 'Number of Days',
+				'title' => __( 'Number of Days', 'user-access-expiration' ),
 				'function' => 'setting_number_days',
 				'section' => 'primary_section'
 			),
 			array(
 				'id' => 'error_message',
-				'title' => 'Error Message',
+				'title' => __( 'Error Message', 'user-access-expiration' ),
 				'function' => 'setting_error_message',
 				'section' => 'primary_section'
 			),
@@ -255,7 +273,8 @@ class UserAccessExpiration
 	{
 		$options = get_option( $this->option_name );
 		echo "<input id='number_of_days' name='user_access_expire_options[number_days]' size='10' type='text' value='{$options['number_days']}' />";
-		echo "<br>How many days after registration should a user have access for?";
+		echo '<br>';
+		_e( 'How many days after registration should a user have access for?', 'user-access-expiration' );
 	}
 	
 	/** 
@@ -271,8 +290,10 @@ class UserAccessExpiration
 	{
 		$options = get_option( $this->option_name );
 		echo "<input id='error_message' name='user_access_expire_options[error_message]' size='75' type='text' value='{$options['error_message']}' />";
-		echo "<br>This message is displayed to a user once their access is denied.";
-		echo "<br><b>Example:</b> To gain access please contact us at myemail@myexample.com.";	
+		echo '<br>';
+		_e( 'This message is displayed to a user once their access is denied.', 'user-access-expiration' );
+		echo '<br>';
+		echo '<strong>'.__( 'Example', 'user-access-expiration' ).': </strong>'.__( 'To gain access please contact us at myemail@myexample.com.', 'user-access-expiration' );
 	}
 	
 	/** 
@@ -296,7 +317,7 @@ class UserAccessExpiration
 			add_settings_error(
 				$input['number_days'],
 				'_txt_numeric_error',
-				__( 'Sorry that is not a number. Please enter a number.	' ),
+				__( 'Sorry that is not a number. Please enter a number.	', 'user-access-expiration' ),
 				'error'
 			);
 		}
@@ -317,12 +338,12 @@ class UserAccessExpiration
 		<div class="wrap">
 			<?php settings_errors(); ?>
 			<div class="icon32" id="icon-options-general"><br></div>
-			<h2><?php _e( 'User Access Expiration Settings' ); ?></h2>
+			<h2><?php _e( 'User Access Expiration Settings', 'user-access-expiration' ); ?></h2>
 			<form method="post" action="options.php">
 				<?php settings_fields( 'user_access_expire_options' ); ?>
 				<?php do_settings_sections( __FILE__ ); ?>
 				<p class="submit">
-				<input type="submit" class="button-primary" value="<?php _e( 'Save Changes' ) ?>" />
+				<input type="submit" class="button-primary" value="<?php _e( 'Save Changes', 'user-access-expiration' ) ?>" />
 				</p>
 			</form>
 		</div>
@@ -345,19 +366,19 @@ class UserAccessExpiration
 	 	if( current_user_can( 'manage_options', $user->ID ) )
 		{
 		?>
-		<h3>User Access Expiration</h3>
+		<h3><?php _e( 'User Access Expiration', 'user-access-expiration' ); ?></h3>
 		<table class="form-table">
 		<tr>
-			<th>Registered date: </th>
+			<th><?php _e( 'Registered date', 'user-access-expiration' ); ?>: </th>
 			<td><?php echo date_i18n( get_option( 'date_format' ).' '.get_option( 'time_format' ) ,strtotime( get_the_author_meta( 'user_registered', $user->ID ) ) ); ?></td>
 		</tr>
 		<tr>
-			<th><label for="user-access">Does this person have access to the site?</label></th>
+			<th><label for="user-access"><?php _e( 'Does this person have access to the site?', 'user-access-expiration' ); ?></label></th>
 			<td>
 				<?php $access = get_the_author_meta( $this->user_meta, $user->ID ); ?>
 				<select id="user-access" name="user-access" class="regular-text">
-					<option value="false" <?php if ( $access == 'false' ) echo "selected"; ?>>Yes</option>
-					<option value="true" <?php if ( $access == 'true' ) echo "selected"; ?>>No</option>
+					<option value="false" <?php if ( $access == 'false' ) echo "selected"; ?>><?php _e( 'Yes', 'user-access-expiration' ); ?></option>
+					<option value="true" <?php if ( $access == 'true' ) echo "selected"; ?>><?php _e( 'No', 'user-access-expiration' ); ?></option>
 				</select>
 			</td>
 		</tr>
