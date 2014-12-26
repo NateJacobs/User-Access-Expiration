@@ -4,7 +4,7 @@
  *	Plugin Name: User Access Expiration
  *	Plugin URI: https://github.com/NateJacobs/User-Access-Expiration
  *	Description: Expires a user's access to a site after a specified number of days based upon the registration date. The administrator can restore a user's access from the user's profile page.
- *	Version: 1.1
+ *	Version: 1.2
  *	License: GPL V2
  *	Author: Nate Jacobs <nate@natejacobs.org>
  *	Author URI: http://natejacobs.org
@@ -138,8 +138,20 @@ class UserAccessExpiration
 			// get the user registered time
 			$register_time = strtotime( $user_info->user_registered );
 			// get the date in unix time that is the specified number of elapsed days from the registered date
-			$expire_time = strtotime( '+'.$options['number_days'].'days', $register_time );
+			$elapsed_time = strtotime( '+'.$options['number_days'].'days', $register_time );
 			
+			/** 
+			 *	Filter the expiration date of the specified user.
+			 *
+			 *	@author		Nate Jacobs
+			 *	@date		12/25/14
+			 *	@since		1.2
+			 *
+			 *	@param		int	$elapsed_time Epoch since the user registered + number of expiration days.
+			 *	@param		WP_User $user_info The WP_User object of the user attempting to log in.
+			 */
+			$expire_time = apply_filters( 'uae_expiration_date', $elapsed_time, $user_info );
+		
 			if( $expire_time < date( 'U' ) )
 			{
 				if( user_can($user_info->ID, 'manage_options') )

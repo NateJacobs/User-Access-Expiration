@@ -1,20 +1,18 @@
-# User Activation Email #
+# User Access Expiration #
 
 **Contributors:** NateJacobs   
-**Tags:** user, registration, activation, email  
+**Tags:** user, access, expiration
 **Requires at least:** 3.5 
-**Tested up to:** 3.8
-**Stable tag:** 1.1
+**Tested up to:** 4.1
+**Stable tag:** 1.2
 
-Require users to enter an activation code to access the site the first time. The activation code is emailed upon user registration.
+A user's access to a site is disabled after a specified number of days. The admin can set the number of days since registration to deny access.
 
 ## Description ##
 
-Adds an activation code to the new user email sent once a user registers. The user must enter this activation code in addition to a username and password to log in successfully the first time. A 10 character activation code is added to the user meta when the user is registered.
+Expires a user's access to a site after a specified number of days. It uses the user registered date/time and an admin configured number of days to determine when to expire the users access. The administrator can restore a user's access from the user's profile page.
 
-The administrator may reset the activation code or enter a new one from the users profile page.
-
-This plugin does not currently work with multi-site. Multi-site uses an activation key system for new registrations already.
+There is a filter available for developers to hook into and alter the expiration date of a specific user on the fly during authentication. The filter uae_expiration_date passes the current expiration date and the WP_User object.
 
 ## Installation ##
 
@@ -31,6 +29,9 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 
 ## Changelog ##
 
+### 1.2 ###
+* Add a new filter to allow the expiration date to be changed for a specific user
+
 ### 1.1 ###
 * Compatible with 3.8
 * Add support for WordPress language packs introduced in 3.7
@@ -42,14 +43,15 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 * Compatible with 3.7
 
 ### 0.4 ###
-* Fixed authentication issue
+* Exempt admins and super admins from expiration
 
 ### 0.3 ###
-* WordPress 3.3 compatible
-* Localized and available for translation
+* Fix log in issue
 
 ### 0.2 ###
-* Added a field, shown only to admins, to the user profile that displays the activation code 
+* Added expiration settings to Settings Menu
+* Allow administrator to set number of days a user's access should expire after
+* Allow administrator to reset a user's access from the user's profile page
 
 ### 0.1 ###
 * First version

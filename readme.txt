@@ -3,14 +3,16 @@
 Contributors: NateJacobs 
 Tags: user, access, expiration
 Requires at least: 3.5
-Tested up to: 3.8
-Stable tag: 1.1
+Tested up to: 4.1
+Stable tag: 1.2
 
 A user's access to a site is disabled after a specified number of days. The admin can set the number of days since registration to deny access.
 
 == Description ==
 
 Expires a user's access to a site after a specified number of days. It uses the user registered date/time and an admin configured number of days to determine when to expire the users access. The administrator can restore a user's access from the user's profile page.
+
+There is a filter available for developers to hook into and alter the expiration date of a specific user on the fly during authentication. The filter uae_expiration_date passes the current expiration date and the WP_User object.
 
 == Installation ==
 
@@ -21,6 +23,9 @@ Extract the zip file and just drop the contents in the wp-content/plugins/ direc
 2. Admin settings
 
 == Changelog ==
+
+= 1.2 =
+* Add a new filter to allow the expiration date to be changed for a specific user
 
 = 1.1 =
 * Compatible with 3.8
